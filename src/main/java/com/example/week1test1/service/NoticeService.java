@@ -6,11 +6,9 @@ import com.example.week1test1.entity.Notice;
 import com.example.week1test1.repository.NoticeRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @AllArgsConstructor
