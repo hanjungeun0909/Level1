@@ -44,9 +44,10 @@ public class PostService {
         String substringToken = jwtUtil.substringToken(token);
         //검증
         boolean isValidateToken = jwtUtil.validateToken(substringToken);
+        String username = jwtUtil.getUserInfoFromToken(substringToken).getSubject();
 
         if (isValidateToken) {
-            Post post = new Post(requestDto);
+            Post post = new Post(requestDto, username);
             Post savedPost = postRepository.save(post);
             return new PostResponseDto(savedPost);
         }else{
@@ -55,37 +56,45 @@ public class PostService {
     }
 
     @Transactional
-    public Post updatePost(Long id, PostRequestDto requestDto, HttpServletRequest request){
+    public Post updatePost(Long id, PostRequestDto requestDto, HttpServletRequest request) {
         Post post = findPost(id);
 
-        // HttpServlet에서 쿠키 가져와 JWT 토큰 꺼내
+        // HttpServlet에서 쿠키 가져와 JWT 토큰 꺼내기
         String token = jwtUtil.getTokenFromRequest(request);
-        System.out.println("token= "+ token);
         String substringToken = jwtUtil.substringToken(token);
-        String username = jwtUtil.getUserInfoFromToken(jwt).getSubject();
-
-        if(jwtUtil.validateToken(jwt) && username.equals(post.getUsername())){
-            post.update(requestDto);
-        }else{
-            throw new IllegalArgumentException("잘못된 접근입니다.U");
-
+        if(!jwtUtil.validateToken(substringToken)){
+            throw new IllegalArgumentException("token error");
         }
+        Claims claims = jwtUtil.getUserInfoFromToken(substringToken);
+
+        String username = claims.getSubject();
+        System.out.println(username);
+        System.out.println(post.getUsername());
+        if (username.equals(post.getUsername())) {
+            post.update(requestDto);
+        } else {
+            throw new IllegalArgumentException("잘못된 접근입니다.");
+        }
+
         return post;
     }
 
 
     public void deletePost(Long id, HttpServletRequest res) {
         Post post = findPost(id);
-        String username = "";
-        // HttpServlet에서 쿠키 가져와 JWT 토큰 꺼내
-        String jwt = jwtUtil.getTokenFromRequest(res);
 
-        // 쿠키에서 JWT 토큰 자르기
-        jwt = jwtUtil.substringToken(jwt);
+        // HttpServlet에서 쿠키 가져와 JWT 토큰 꺼내기
+        String token = jwtUtil.getTokenFromRequest(res);
+        String substringToken = jwtUtil.substringToken(token);
+        if(!jwtUtil.validateToken(substringToken)){
+            throw new IllegalArgumentException("token error");
+        }
+        Claims claims = jwtUtil.getUserInfoFromToken(substringToken);
 
-        username = jwtUtil.substringToken(jwt);
-
-        if(jwtUtil.validateToken(jwt) && username.equals(post.getUsername())){
+        String username = claims.getSubject();
+        System.out.println(username);
+        System.out.println(post.getUsername());
+        if(jwtUtil.validateToken(substringToken) && username.equals(post.getUsername())){
             postRepository.delete(post);
         }else{
             throw new IllegalArgumentException("잘못된 접근입니다.");
