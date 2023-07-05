@@ -1,4 +1,7 @@
 ![image](https://github.com/hanjungeun0909/Level1/assets/132903726/b29157d1-8ed8-4ec8-bf8b-91d695b46ac4)
+ERD
+![image](https://github.com/hanjungeun0909/Level1/assets/132903726/73619f83-cb9a-4406-8920-dbefbdaccd06)
+
 api 명세서
 ![image](https://github.com/hanjungeun0909/Level1/assets/132903726/36cbe3fd-ec71-49ff-9dab-6e6155e0e9c9)
 ![image](https://github.com/hanjungeun0909/Level1/assets/132903726/ab675a05-f5cd-49a4-9c75-751991353204)
